@@ -35,6 +35,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -70,7 +71,7 @@ class MainActivity : ComponentActivity() {
                     arguments = listOf(navArgument("userName") { type = NavType.StringType })
                 ) { backStackEntry ->
                     val userName = backStackEntry.arguments?.getString("userName") ?: "Usuário"
-                    HomeScreen(userName = userName)
+                    HomeScreen(userName = userName, navController = navController)
                 }
             }
         }
@@ -180,7 +181,7 @@ fun RegisterScreen(onRegisterComplete: () -> Unit) {
 }
 
 @Composable
-fun HomeScreen(userName: String = "Usuário") {
+fun HomeScreen(userName: String = "Usuário", navController: NavController) {
     var showMenu by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
@@ -227,8 +228,12 @@ fun HomeScreen(userName: String = "Usuário") {
                 DropdownMenuItem(
                     text = { Text("Deslogar") },
                     onClick = {
-                        Toast.makeText(context, "Deslogar", Toast.LENGTH_SHORT).show()
                         showMenu = false
+                        navController.navigate("login") {
+                            popUpTo("login") {
+                                inclusive = true
+                            }
+                        }
                     }
                 )
             }
