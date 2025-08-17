@@ -3,13 +3,22 @@ package com.example.cadastroapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import android.widget.Toast
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -21,6 +30,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
@@ -75,6 +85,7 @@ fun LoginScreen(onLogin: (String) -> Unit, onRegisterClick: () -> Unit) {
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
@@ -118,6 +129,7 @@ fun RegisterScreen(onRegisterComplete: () -> Unit) {
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
@@ -169,8 +181,12 @@ fun RegisterScreen(onRegisterComplete: () -> Unit) {
 
 @Composable
 fun HomeScreen(userName: String = "Usuário") {
+    var showMenu by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
@@ -178,5 +194,44 @@ fun HomeScreen(userName: String = "Usuário") {
         Text("Bem-vindo, $userName!", fontSize = 24.sp, fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.height(8.dp))
         Text("Use o menu para navegar.", fontSize = 16.sp, color = Color.Gray)
+
+        Box {
+            IconButton(onClick = { showMenu = !showMenu }) {
+                Icon(Icons.Default.MoreVert, contentDescription = "Mais opções")
+            }
+            DropdownMenu(
+                expanded = showMenu,
+                onDismissRequest = { showMenu = false }
+            ) {
+                DropdownMenuItem(
+                    text = { Text("Cadastrar Produto") },
+                    onClick = {
+                        Toast.makeText(context, "Cadastrar Produto", Toast.LENGTH_SHORT).show()
+                        showMenu = false
+                    }
+                )
+                DropdownMenuItem(
+                    text = { Text("Listar Produto") },
+                    onClick = {
+                        Toast.makeText(context, "Listar Produto", Toast.LENGTH_SHORT).show()
+                        showMenu = false
+                    }
+                )
+                DropdownMenuItem(
+                    text = { Text("Perfil de $userName") },
+                    onClick = {
+                        Toast.makeText(context, "Perfil de $userName", Toast.LENGTH_SHORT).show()
+                        showMenu = false
+                    }
+                )
+                DropdownMenuItem(
+                    text = { Text("Deslogar") },
+                    onClick = {
+                        Toast.makeText(context, "Deslogar", Toast.LENGTH_SHORT).show()
+                        showMenu = false
+                    }
+                )
+            }
+        }
     }
 }
